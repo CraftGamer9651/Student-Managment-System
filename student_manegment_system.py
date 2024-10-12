@@ -2,6 +2,8 @@ from student import Student
 import csv
 import tkinter as tk
 
+
+
 def save_students_to_file(students, filename):
     #Name, student ID, grade level, grades
     file = open(filename, 'w', newline='')
@@ -10,9 +12,9 @@ def save_students_to_file(students, filename):
     for s in students:
         writer.writerow(s.to_list())
 
-def load_students_from_file():
+def load_students_from_file(filename):
     students = []
-    file = open(filename.get(), 'r', newline='')
+    file = open(filename, 'r', newline='')
     reader = csv.reader(file)
     next(reader)
     for row in reader:
@@ -20,6 +22,11 @@ def load_students_from_file():
         students.append(s)
         return students
     root.destroy()
+
+def load_clicked():
+    global entry
+    filename = entry.get()
+    load_students_from_file(filename)
 
 
 def lookup(name,students):
@@ -48,36 +55,22 @@ def close_window():
 if __name__ == "__main__":
 
     school = []
-    
-    print("\nWelcome to SMSA")
-    response = input("Would you like to:\n1. Create new school\n2. Load pre-existing school\n")
-    if response  == "1":
-        fileName = input("Enter name of file to save to (ex. schoolname.csv):\n")
-    elif response == "2":
-        fileName = input("Enter name of file to load from (ex. schoolname.csv):\n")
-        school = load_students_from_file(fileName)
-    else:
-        print("Invalid input\nPlease choose 1 of 2")
-    
+    fileName = ""
 
     root = tk.Tk()
     root.title("SMSA")
-    filename = tk.StringVar()
+    #filename = tk.StringVar()
 
     root.configure(bg="#0085FF")
     root.minsize(192, 108)
 
 
     tk.Label(root, text="Welcome to the Student Manegment System", bg="#0085FF").grid(column=0, row=0)
+    tk.Label(root, text="Enter file name:", bg="#0085FF").grid(column=0, row=1)
     tk.Button(root, text='Create new school', bg="#FFA500").grid(column=0, row=2)
-    tk.Button(root, text='Load school from file', command=load_students_from_file, bg="#FFA500").grid(column=1, row=2)
-    tk.Button(root, text='Exit application', command=close_window, bg="#FF0000").grid(column=10, row=3)
-
-    tk.Label(root, text="Enter file name:", bg="#0085FF").grid(column=0, row=0)
-    tk.Entry(root, textvariable=fileName).grid(column=0, row=1)
-
-    tk.Label(root, text="All students:")
-    tk.Label(root, textvariable=load_students_from_file).grid(column=0, row=5)
+    tk.Button(root, text='Load school from file', command=load_clicked, bg="#FFA500").grid(column=1, row=2)
+    tk.Button(root, text='Exit application', command=close_window, bg="#FF0000").grid(column=2, row=2)
+    entry = tk.Entry(root, textvariable=fileName).grid(column=1, row=1)
     
     root.mainloop()
     
